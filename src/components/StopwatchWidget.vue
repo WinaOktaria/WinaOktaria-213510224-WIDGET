@@ -1,17 +1,16 @@
 <template>
-  <div class="stopwatch" style="margin-top: 100px;">
+  <div class="stopwatch-widget">
     <h1>Stopwatch</h1>
-    <div class="time" :class="{ 'countdown': isRunning && elapsedTime > 0 }">
-      {{ formatTime(elapsedTime) }}
-      <div v-if="isRunning" class="loader"></div>
-    </div>
-    <div class="buttons">
-      <button class="start-button" @click="startStopwatch" :disabled="isRunning">
-        <span v-if="!isRunning">Start</span>
-        <span v-else>Resume</span>
-      </button>
-      <button class="stop-button" @click="stopStopwatch" :disabled="!isRunning">Stop</button>
-      <button class="reset-button" @click="resetStopwatch">Reset</button>
+    <div class="content">
+      <div class="time">
+        {{ formatTime(elapsedTime) }}
+        <div v-if="isRunning" class="loader"></div>
+      </div>
+      <div class="buttons">
+        <button @click="startStopwatch" :disabled="isRunning" class="start-button">Start</button>
+        <button @click="stopStopwatch" :disabled="!isRunning || elapsedTime === 0" class="stop-button">Stop</button>
+        <button @click="resetStopwatch" :disabled="isRunning || elapsedTime === 0" class="reset-button">Reset</button>
+      </div>
     </div>
   </div>
 </template>
@@ -62,49 +61,40 @@ export default {
 </script>
 
 <style>
-.stopwatch {
-  text-align: center;
-}
-
-h1 {
-  font-size: 32px;
-  font-weight: bold;
-}
-
-.time {
-  font-size: 72px;
-  font-weight: bold;
-  margin: 20px 0;
-  transition: color 0.3s ease;
-  position: relative;
-}
-
-.countdown {
-  color: #dc3545;
-}
-
 .loader {
-  position: absolute;
-  top: calc(50% - 200px);
-  left: calc(50% - 200px);
-  width: 400px;
-  height: 400px;
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
   border-radius: 50%;
-  border-top: 4px solid #dc3545;
-  border-right: 4px solid transparent;
-  animation: loaderAnimation 1s linear infinite;
+  border: 2px solid #fff;
+  border-top-color: #1f79a1;
+  animation: spin 0.8s infinite linear;
 }
 
-@keyframes loaderAnimation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
+@keyframes spin {
+  to {
     transform: rotate(360deg);
   }
 }
 
+.stopwatch-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .buttons {
+  display: flex;
+  justify-content: center;
   margin-top: 20px;
 }
 
@@ -112,46 +102,36 @@ button {
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
+  color: #fff;
   cursor: pointer;
-  border: none;
-  outline: none;
   transition: background-color 0.3s ease;
 }
 
 .start-button {
-  background-color: #28a745;
-  color: #fff;
-}
-
-.start-button:disabled {
-  background-color: #73c6b6;
-  cursor: not-allowed;
-}
-
-.start-button:hover:not(:disabled) {
-  background-color: #218838;
+  background-color: #1f79a1;
 }
 
 .stop-button {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-.stop-button:disabled {
-  background-color: #e6b3a1;
-  cursor: not-allowed;
-}
-
-.stop-button:hover:not(:disabled) {
-  background-color: #c82333;
+  background-color: #e85a71;
 }
 
 .reset-button {
-  background-color: #ffc107;
-  color: #212529;
+  background-color: #4caf50;
 }
 
-.reset-button:hover {
-  background-color: #e0a800;
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
