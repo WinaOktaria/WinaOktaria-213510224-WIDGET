@@ -56,7 +56,9 @@ export default {
   align-items: center;
   justify-content: center;
   height: 100vh;
+  margin-top: 70px; /* Atur nilai sesuai kebutuhan Anda */
 }
+
 
 .hero-section {
   text-align: center;
