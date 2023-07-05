@@ -26,30 +26,35 @@ export default {
     this.fetchLocationData();
   },
   methods: {
-    fetchLocationData() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
+    async fetchLocationData() {
+      try {
+        if (navigator.geolocation) {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+          });
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
 
-          // Ganti API_KEY dengan kunci API Nominatim (untuk reverse geocoding)
-          const API_KEY = 'eeWoXNeWZJKz_Um8wJFakDt7EHmmKj2BPGVyzCZUJFg';
-          const API_URL = `https://geocode.search.hereapi.com/v1/geocode?q=240+Washington+St.%2C+Boston&limit=4&apiKey={eeWoXNeWZJKz_Um8wJFakDt7EHmmKj2BPGVyzCZUJFg}}`;
+          const apiKey = '92591005a7b94008909d59a64b6d2a49';
+          const apiUrl = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
+            latitude + ',' + longitude
+          )}&key=${apiKey}`;
 
-          fetch(API_URL)
-            .then(response => response.json())
-            .then(data => {
-              this.locationData = {
-                latitude,
-                longitude,
-                address: data.display_name,
-              };
-              this.displayMap(latitude, longitude);
-            })
-            .catch(error => console.error('Error fetching location data:', error));
-        });
-      } else {
-        console.error('Geolocation is not supported by this browser.');
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+
+          this.locationData = {
+            latitude,
+            longitude,
+            address: data.results[0].formatted,
+          };
+
+          this.displayMap(latitude, longitude);
+        } else {
+          console.error('Geolocation is not supported by this browser.');
+        }
+      } catch (error) {
+        console.error('Error fetching location data:', error);
       }
     },
     displayMap(latitude, longitude) {
@@ -72,6 +77,14 @@ export default {
 <style>
 .location {
   text-align: center;
+  color: #fff;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  border-color: black;
+  background: url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXN6ZG96aTMwcmxlZ2tkYmRvb3E5YjF6bHg3bWZldDZqaHN2bXplcyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/mf8UbIDew7e8g/giphy.gif');
+  background-size: cover;
+  background-position: center;
 }
 
 .btn-refresh {
@@ -92,5 +105,4 @@ export default {
   width: 100%;
   margin-top: 20px;
 }
-
 </style>

@@ -1,8 +1,9 @@
 <template>
-  <div class="stopwatch">
+  <div class="stopwatch" style="margin-top: 100px;">
     <h1>Stopwatch</h1>
     <div class="time" :class="{ 'countdown': isRunning && elapsedTime > 0 }">
       {{ formatTime(elapsedTime) }}
+      <div v-if="isRunning" class="loader"></div>
     </div>
     <div class="buttons">
       <button class="start-button" @click="startStopwatch" :disabled="isRunning">
@@ -63,7 +64,6 @@ export default {
 <style>
 .stopwatch {
   text-align: center;
-  margin-top: 50px;
 }
 
 h1 {
@@ -76,19 +76,31 @@ h1 {
   font-weight: bold;
   margin: 20px 0;
   transition: color 0.3s ease;
+  position: relative;
 }
 
 .countdown {
-  animation: countdownAnimation 1s infinite alternate;
   color: #dc3545;
 }
 
-@keyframes countdownAnimation {
+.loader {
+  position: absolute;
+  top: calc(50% - 200px);
+  left: calc(50% - 200px);
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  border-top: 4px solid #dc3545;
+  border-right: 4px solid transparent;
+  animation: loaderAnimation 1s linear infinite;
+}
+
+@keyframes loaderAnimation {
   0% {
-    transform: scale(1);
+    transform: rotate(0deg);
   }
   100% {
-    transform: scale(1.2);
+    transform: rotate(360deg);
   }
 }
 
