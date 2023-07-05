@@ -49,7 +49,7 @@ nav {
 }
 
 nav button {
-  background-color: #007bff;
+  background-color: #99627A;
   color: #fff;
   border: none;
   border-radius: 4px;
